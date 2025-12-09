@@ -63,7 +63,7 @@ Provide only the numerical answer and a brief explanation. Do not make up data."
             };
 
             var response = await _httpClient.PostAsJsonAsync(
-                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={apiKey}",
+                $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={apiKey}",
                 requestBody
             );
 

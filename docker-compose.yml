@@ -8,6 +8,7 @@ services:
     environment:
       - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
       - ASPNETCORE_ENVIRONMENT=Development
+      - GEMINI_API_KEY=AIzaSyD9thWTYxjEzPXYYCabaaA4OqmW44JDvIE
     ports:
       - "5001:8080"
     depends_on:
