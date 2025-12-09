@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: WebAPI/Dockerfile
     environment:
-      - POSTGRESQL_ADDON_URI=${POSTGRESQL_ADDON_URI}
+      - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
       - "5001:8080"
@@ -20,7 +20,7 @@ services:
       context: .
       dockerfile: WebApp/Dockerfile
     environment:
-      - POSTGRESQL_ADDON_URI=${POSTGRESQL_ADDON_URI}
+      - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
       - ASPNETCORE_ENVIRONMENT=Development
       - ApiBaseUrl=http://webapi:8080
     ports:
