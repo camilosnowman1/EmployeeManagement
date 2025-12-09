@@ -11,6 +11,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAPI", "WebAPI\WebAPI.csproj", "{F15774DB-1688-44D7-980B-6D60777E6E40}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApp", "WebApp\WebApp.csproj", "{75F082F4-27DA-46CB-B158-4529C4470F5F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{888957DC-E4DE-4B5F-80A5-99200C62E38D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbVerifier", "Tools\DbVerifier\DbVerifier.csproj", "{E6B04819-A73D-425E-8E19-58A09A191F38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +42,16 @@ Global
 		{F15774DB-1688-44D7-980B-6D60777E6E40}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F15774DB-1688-44D7-980B-6D60777E6E40}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F15774DB-1688-44D7-980B-6D60777E6E40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F082F4-27DA-46CB-B158-4529C4470F5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F082F4-27DA-46CB-B158-4529C4470F5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F082F4-27DA-46CB-B158-4529C4470F5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F082F4-27DA-46CB-B158-4529C4470F5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6B04819-A73D-425E-8E19-58A09A191F38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6B04819-A73D-425E-8E19-58A09A191F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6B04819-A73D-425E-8E19-58A09A191F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6B04819-A73D-425E-8E19-58A09A191F38}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E6B04819-A73D-425E-8E19-58A09A191F38} = {888957DC-E4DE-4B5F-80A5-99200C62E38D}
 	EndGlobalSection
 EndGlobal

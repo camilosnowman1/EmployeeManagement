@@ -3,23 +3,13 @@ using Domain.Interfaces;
 using Infrastructure.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection;
 using FluentValidation;
 using Application.Employees.Commands.CreateEmployee;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new() { Title = "Employee API", Version = "v1" });
-    // Set the comments path for the Swagger JSON and UI.
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    c.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddRazorPages();
 
 // Database Configuration
 var connectionString = ConnectionStringHelper.GetConnectionString(builder.Configuration);
@@ -42,14 +32,19 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateEmployeeValidator).Assem
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-// In production, we might want to keep Swagger enabled for this demo
-app.UseSwagger();
-app.UseSwaggerUI();
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllers();
+app.MapRazorPages();
 
 app.Run();

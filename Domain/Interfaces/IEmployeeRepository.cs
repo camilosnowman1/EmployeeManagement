@@ -5,6 +5,7 @@ namespace Domain.Interfaces;
 public interface IEmployeeRepository
 {
     Task<IEnumerable<Employee>> GetAllAsync();
+    Task<(IEnumerable<Employee> Items, int TotalCount)> GetPaginatedAsync(int page, int pageSize);
     Task<Employee?> GetByIdAsync(Guid id);
     Task AddAsync(Employee employee);
     Task UpdateAsync(Employee employee);

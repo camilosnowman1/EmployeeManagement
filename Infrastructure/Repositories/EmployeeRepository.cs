@@ -19,6 +19,18 @@ public class EmployeeRepository : IEmployeeRepository
         return await _context.Employees.ToListAsync();
     }
 
+    public async Task<(IEnumerable<Employee> Items, int TotalCount)> GetPaginatedAsync(int page, int pageSize)
+    {
+        var totalCount = await _context.Employees.CountAsync();
+        var items = await _context.Employees
+            .OrderBy(e => e.LastName)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+        
+        return (items, totalCount);
+    }
+
     public async Task<Employee?> GetByIdAsync(Guid id)
     {
         return await _context.Employees.FindAsync(id);

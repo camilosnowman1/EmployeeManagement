@@ -1,0 +1,39 @@
+@page
+@model WebApp.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<h1>Employees</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Document</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Job Title</th>
+            <th>Department</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Employees) {
+        <tr>
+            <td>@item.DocumentNumber</td>
+            <td>@item.FirstName @item.LastName</td>
+            <td>@item.Email</td>
+            <td>@item.JobTitle</td>
+            <td>@item.Department</td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
