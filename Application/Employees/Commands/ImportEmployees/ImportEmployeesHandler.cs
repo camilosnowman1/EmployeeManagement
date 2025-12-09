@@ -30,7 +30,24 @@ public class ImportEmployeesHandler : IRequestHandler<ImportEmployeesCommand, in
             // For simplicity, we'll assume we just add them or update if we had an Update logic based on ID.
             // Since DTO doesn't have ID for new ones, we map to Entity.
             
-            var employee = _mapper.Map<Employee>(dto);
+            var employee = new Employee
+            {
+                Id = Guid.NewGuid(),
+                DocumentNumber = dto.DocumentNumber,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                DateOfBirth = DateTime.SpecifyKind(dto.DateOfBirth, DateTimeKind.Utc),
+                Address = dto.Address,
+                PhoneNumber = dto.PhoneNumber,
+                Email = dto.Email,
+                JobTitle = dto.JobTitle,
+                Salary = dto.Salary,
+                HireDate = DateTime.SpecifyKind(dto.HireDate, DateTimeKind.Utc),
+                Status = dto.Status,
+                EducationLevel = dto.EducationLevel,
+                ProfessionalProfile = dto.ProfessionalProfile,
+                Department = dto.Department
+            };
             
             // Basic validation or check could go here
             
