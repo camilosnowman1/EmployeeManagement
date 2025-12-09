@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using FluentValidation;
 using Application.Employees.Commands.CreateEmployee;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,35 @@ var connectionString = ConnectionStringHelper.GetConnectionString(builder.Config
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+// Identity Configuration
+builder.Services.AddIdentity<Microsoft.AspNetCore.Identity.IdentityUser, Microsoft.AspNetCore.Identity.IdentityRole>()
+    .AddEntityFrameworkStores<AppDbContext>()
+    .AddDefaultTokenProviders();
+
+// JWT Configuration
+var jwtKey = builder.Configuration["Jwt:Key"] ?? "SuperSecretKey12345678901234567890"; // Use Env Var in Prod
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "https://localhost:5000";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "https://localhost:5000";
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(jwtKey))
+    };
+});
+
 // Dependency Injection
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
@@ -41,6 +71,13 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateEmployeeValidator).Assem
 
 var app = builder.Build();
 
+// Apply Migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 // In production, we might want to keep Swagger enabled for this demo
 app.UseSwagger();
@@ -48,6 +85,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

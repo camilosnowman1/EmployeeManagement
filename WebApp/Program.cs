@@ -5,6 +5,7 @@ using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using Application.Employees.Commands.CreateEmployee;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ var connectionString = ConnectionStringHelper.GetConnectionString(builder.Config
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
+
+// Identity Configuration
+builder.Services.AddDefaultIdentity<Microsoft.AspNetCore.Identity.IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<AppDbContext>();
 
 // Dependency Injection
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
@@ -31,6 +36,13 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateEmployeeValidator).Assem
 
 var app = builder.Build();
 
+// Apply Migrations automatically
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.Migrate();
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -43,6 +55,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

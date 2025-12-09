@@ -21,9 +21,9 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<EmployeeDto>>> GetAll()
+    public async Task<ActionResult<PaginatedResult<EmployeeDto>>> GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
-        var query = new GetEmployeesQuery();
+        var query = new GetEmployeesQuery(page, pageSize);
         var result = await _mediator.Send(query);
         return Ok(result);
     }

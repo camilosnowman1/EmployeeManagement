@@ -5,7 +5,7 @@ using Application.DTOs;
 
 namespace Application.Employees.Queries.GetEmployees;
 
-public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, IEnumerable<EmployeeDto>>
+public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, PaginatedResult<EmployeeDto>>
 {
     private readonly IEmployeeRepository _repository;
     private readonly IMapper _mapper;
@@ -16,9 +16,11 @@ public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, IEnumerabl
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<EmployeeDto>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
+    public async Task<PaginatedResult<EmployeeDto>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
     {
-        var employees = await _repository.GetAllAsync();
-        return _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var (employees, totalCount) = await _repository.GetPaginatedAsync(request.Page, request.PageSize);
+        var employeeDtos = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        
+        return new PaginatedResult<EmployeeDto>(employeeDtos, totalCount, request.Page, request.PageSize);
     }
 }
