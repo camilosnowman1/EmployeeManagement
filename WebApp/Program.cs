@@ -43,12 +43,12 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateEmployeeValidator).Assem
 
 var app = builder.Build();
 
-// Apply Migrations automatically
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
-}
+// Apply migrations automatically (commented out for Docker - run manually)
+// using (var scope = app.Services.CreateScope())
+// {
+//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+//     db.Database.Migrate();
+// }
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
