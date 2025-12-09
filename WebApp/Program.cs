@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using FluentValidation;
 using Application.Employees.Commands.CreateEmployee;
 using Microsoft.AspNetCore.Identity;
+using Application.Interfaces;
+using Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +26,8 @@ builder.Services.AddDefaultIdentity<Microsoft.AspNetCore.Identity.IdentityUser>(
 
 // Dependency Injection
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IPdfService, PdfService>();
+builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Employees.Queries.GetEmployees.GetEmployeesQuery).Assembly));

@@ -28,6 +28,18 @@ public class EmployeesController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("{id}/pdf")]
+    public async Task<IActionResult> DownloadPdf(Guid id)
+    {
+        var query = new Application.Employees.Queries.GetEmployeePdf.GetEmployeePdfQuery(id);
+        var pdfBytes = await _mediator.Send(query);
+
+        if (pdfBytes == null)
+            return NotFound();
+
+        return File(pdfBytes, "application/pdf", $"Employee_{id}.pdf");
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid id)
     {
