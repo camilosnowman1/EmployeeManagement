@@ -1,0 +1,8 @@
+"EmailSettings": {
+    "SmtpServer": "smtp.gmail.com",
+    "SmtpPort": "587",
+    "SmtpUser": "tu_correo@gmail.com",
+    "SmtpPass": "tu_contraseña_de_aplicacion",
+    "FromEmail": "no-reply@talentoplus.com",
+    "FromName": "TalentoPlus RRHH"
+},

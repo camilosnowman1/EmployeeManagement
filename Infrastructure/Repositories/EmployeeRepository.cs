@@ -23,12 +23,24 @@ public class EmployeeRepository : IEmployeeRepository
     {
         var totalCount = await _context.Employees.CountAsync();
         var items = await _context.Employees
-            .OrderBy(e => e.LastName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
-        
+
         return (items, totalCount);
+    }
+
+    public async Task<Employee> GetByEmailAsync(string email)
+    {
+        return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
+    }
+
+    public async Task<IEnumerable<string>> GetDistinctDepartmentsAsync()
+    {
+        return await _context.Employees
+            .Select(e => e.Department)
+            .Distinct()
+            .ToListAsync();
     }
 
     public async Task<Employee?> GetByIdAsync(Guid id)

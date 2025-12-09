@@ -1,4 +1,5 @@
 using Application.DTOs;
+using Application.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -16,11 +17,14 @@ public class AuthController : ControllerBase
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly IConfiguration _configuration;
 
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration)
+    private readonly IEmailService _emailService;
+
+    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, IEmailService emailService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
+        _emailService = emailService;
     }
 
     [HttpPost("register")]
@@ -34,6 +38,7 @@ public class AuthController : ControllerBase
 
         if (result.Succeeded)
         {
+            await _emailService.SendWelcomeEmailAsync(model.Email, model.Email);
             return Ok(new { Message = "User registered successfully" });
         }
 

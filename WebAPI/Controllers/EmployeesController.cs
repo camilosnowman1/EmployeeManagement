@@ -5,6 +5,7 @@ using Application.Employees.Commands.UpdateEmployee;
 using Application.Employees.Queries.GetEmployeeById;
 using Application.Employees.Queries.GetEmployees;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers;
@@ -38,6 +39,47 @@ public class EmployeesController : ControllerBase
             return NotFound();
 
         return File(pdfBytes, "application/pdf", $"Employee_{id}.pdf");
+    }
+
+    [HttpGet("me")]
+    [Authorize]
+    public async Task<ActionResult<EmployeeDto>> GetMe()
+    {
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                    ?? User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized();
+
+        var query = new Application.Employees.Queries.GetMyInfo.GetMyInfoQuery(email);
+        var result = await _mediator.Send(query);
+
+        if (result == null)
+            return NotFound("Employee profile not found for this user.");
+
+        return Ok(result);
+    }
+
+    [HttpGet("me/pdf")]
+    [Authorize]
+    public async Task<IActionResult> DownloadMyPdf()
+    {
+        var email = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value 
+                    ?? User.FindFirst(System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub)?.Value;
+
+        if (string.IsNullOrEmpty(email))
+            return Unauthorized();
+
+        var infoQuery = new Application.Employees.Queries.GetMyInfo.GetMyInfoQuery(email);
+        var employeeDto = await _mediator.Send(infoQuery);
+
+        if (employeeDto == null)
+            return NotFound("Employee profile not found.");
+
+        var pdfQuery = new Application.Employees.Queries.GetEmployeePdf.GetEmployeePdfQuery(employeeDto.Id);
+        var pdfBytes = await _mediator.Send(pdfQuery);
+
+        return File(pdfBytes, "application/pdf", $"My_CV.pdf");
     }
 
     [HttpGet("{id}")]

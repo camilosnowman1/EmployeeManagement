@@ -18,8 +18,8 @@ public class GetEmployeesHandler : IRequestHandler<GetEmployeesQuery, PaginatedR
 
     public async Task<PaginatedResult<EmployeeDto>> Handle(GetEmployeesQuery request, CancellationToken cancellationToken)
     {
-        var (employees, totalCount) = await _repository.GetPaginatedAsync(request.Page, request.PageSize);
-        var employeeDtos = _mapper.Map<IEnumerable<EmployeeDto>>(employees);
+        var (items, totalCount) = await _repository.GetPaginatedAsync(request.Page, request.PageSize);
+        var employeeDtos = _mapper.Map<IEnumerable<EmployeeDto>>(items);
         
         return new PaginatedResult<EmployeeDto>(employeeDtos, totalCount, request.Page, request.PageSize);
     }
