@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{888957DC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbVerifier", "Tools\DbVerifier\DbVerifier.csproj", "{E6B04819-A73D-425E-8E19-58A09A191F38}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.Tests", "Tests\EmployeeManagement.Tests.csproj", "{AEDEC77F-3C5C-48F7-93E9-27498AB9DDDE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{E6B04819-A73D-425E-8E19-58A09A191F38}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6B04819-A73D-425E-8E19-58A09A191F38}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6B04819-A73D-425E-8E19-58A09A191F38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEDEC77F-3C5C-48F7-93E9-27498AB9DDDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEDEC77F-3C5C-48F7-93E9-27498AB9DDDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEDEC77F-3C5C-48F7-93E9-27498AB9DDDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEDEC77F-3C5C-48F7-93E9-27498AB9DDDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E6B04819-A73D-425E-8E19-58A09A191F38} = {888957DC-E4DE-4B5F-80A5-99200C62E38D}

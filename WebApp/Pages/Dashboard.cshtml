@@ -62,4 +62,35 @@
             </div>
         </div>
     </div>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">🤖 AI Assistant - Ask About Employees</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <div class="mb-3">
+                            <label for="Query" class="form-label">Ask a question:</label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="Query" 
+                                   name="Query" 
+                                   asp-for="Query"
+                                   placeholder="e.g., How many employees are in the Technology department?" />
+                        </div>
+                        <button type="submit" class="btn btn-info">Ask AI</button>
+                    </form>
+                    
+                    @if (!string.IsNullOrEmpty(Model.AiResponse))
+                    {
+                        <div class="alert alert-success mt-3">
+                            <strong>AI Response:</strong> @Model.AiResponse
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
