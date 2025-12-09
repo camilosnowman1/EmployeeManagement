@@ -23,6 +23,7 @@ public class EmployeeRepository : IEmployeeRepository
     {
         var totalCount = await _context.Employees.CountAsync();
         var items = await _context.Employees
+            .OrderBy(e => e.DocumentNumber)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
