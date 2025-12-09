@@ -34,20 +34,20 @@ public class ExcelImportService : IExcelImportService
                 {
                     var employee = new EmployeeDto
                     {
-                        DocumentNumber = long.Parse(row["Documento"].ToString()),
-                        FirstName = row["Nombres"].ToString(),
-                        LastName = row["Apellidos"].ToString(),
-                        DateOfBirth = DateTime.Parse(row["FechaNacimiento"].ToString()),
-                        Address = row["Direccion"].ToString(),
-                        PhoneNumber = long.Parse(row["Telefono"].ToString()),
-                        Email = row["Email"].ToString(),
-                        JobTitle = row["Cargo"].ToString(),
-                        Salary = decimal.Parse(row["Salario"].ToString()),
-                        HireDate = DateTime.Parse(row["FechaIngreso"].ToString()),
-                        Status = row["Estado"].ToString(),
-                        EducationLevel = row["NivelEducativo"].ToString(),
-                        ProfessionalProfile = row["PerfilProfesional"].ToString(),
-                        Department = row["Departamento"].ToString()
+                        DocumentNumber = long.Parse(row[0]?.ToString() ?? "0"),
+                        FirstName = row[1]?.ToString() ?? string.Empty,
+                        LastName = row[2]?.ToString() ?? string.Empty,
+                        DateOfBirth = DateTime.SpecifyKind(DateTime.Parse(row[3]?.ToString() ?? DateTime.Now.ToString()), DateTimeKind.Utc),
+                        Address = row[4]?.ToString() ?? string.Empty,
+                        PhoneNumber = long.Parse(row[5]?.ToString() ?? "0"),
+                        Email = row[6]?.ToString() ?? string.Empty,
+                        JobTitle = row[7]?.ToString() ?? string.Empty,
+                        Salary = decimal.Parse(row[8]?.ToString() ?? "0"),
+                        HireDate = DateTime.SpecifyKind(DateTime.Parse(row[9]?.ToString() ?? DateTime.Now.ToString()), DateTimeKind.Utc),
+                        Status = row[10]?.ToString() ?? string.Empty,
+                        EducationLevel = row[11]?.ToString() ?? string.Empty,
+                        ProfessionalProfile = row[12]?.ToString() ?? string.Empty,
+                        Department = row[13]?.ToString() ?? string.Empty
                     };
                     employees.Add(employee);
                 }
