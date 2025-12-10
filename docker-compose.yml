@@ -7,6 +7,13 @@ services:
       - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
       - ASPNETCORE_ENVIRONMENT=Development
       - GEMINI_API_KEY=AIzaSyD9thWTYxjEzPXYYCabaaA4OqmW44JDvIE
+      # Email/SMTP Configuration
+      - EmailSettings__SmtpServer=smtp.gmail.com
+      - EmailSettings__SmtpPort=587
+      - EmailSettings__SmtpUser=camilosnow1997@gmail.com
+      - EmailSettings__SmtpPass=xbstcmmrvsntfizx
+      - EmailSettings__FromEmail=camilosnow1997@gmail.com
+      - EmailSettings__FromName=TalentoPlus RRHH
     ports:
       - "5001:8080"
     depends_on:
@@ -22,9 +29,18 @@ services:
       - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
       - ASPNETCORE_ENVIRONMENT=Development
       - ApiBaseUrl=http://webapi:8080
-      - GEMINI_API_KEY=YOUR_API_KEY_HERE
+      - GEMINI_API_KEY=AIzaSyD9thWTYxjEzPXYYCabaaA4OqmW44JDvIE
+      # Email/SMTP Configuration
+      - EmailSettings__SmtpServer=smtp.gmail.com
+      - EmailSettings__SmtpPort=587
+      - EmailSettings__SmtpUser=camilosnow1997@gmail.com
+      - EmailSettings__SmtpPass=xbstcmmrvsntfizx
+      - EmailSettings__FromEmail=camilosnow1997@gmail.com
+      - EmailSettings__FromName=TalentoPlus RRHH
     ports:
       - "5002:8080"
+    volumes:
+      - webapp_dataprotection_keys:/root/.aspnet/DataProtection-Keys # <-- New: Persist data protection keys
     depends_on:
       webapi:
         condition: service_started
@@ -47,5 +63,19 @@ services:
       retries: 5
     restart: always
 
+  migrations:
+    build:
+      context: .
+      dockerfile: WebAPI/Dockerfile
+      target: build
+    working_dir: /src/WebAPI # <-- New: Set the working directory
+    environment:
+      - POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
+    depends_on:
+      db:
+        condition: service_healthy
+    command: [ "dotnet", "ef", "database", "update" ] # <-- Modified: No longer needs --project
+
 volumes:
   postgres_data:
+  webapp_dataprotection_keys: # <-- New: Define the volume

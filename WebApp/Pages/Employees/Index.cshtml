@@ -1,0 +1,149 @@
+@page
+@model WebApp.Pages.Employees.IndexModel
+@{
+    ViewData["Title"] = "Employees";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mt-4 mb-4">
+        <h1>@ViewData["Title"]</h1>
+        <div>
+            <a asp-page="Create" class="btn btn-success">
+                <i class="fas fa-plus me-1"></i> Add Employee
+            </a>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @Model.Message
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @Model.ErrorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <!-- Excel Upload Section -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-file-excel me-1"></i> Import Employees from Excel
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="UploadExcel" enctype="multipart/form-data" class="row g-3">
+                <div class="col-md-8">
+                    <input type="file" name="excelFile" class="form-control" accept=".xlsx,.xls" required />
+                    <div class="form-text">Upload an Excel file (.xlsx or .xls) with employee data.</div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload me-1"></i> Upload & Import
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Employees Table -->
+    <div class="card">
+        <div class="card-header">
+            <i class="fas fa-users me-1"></i> Employee List
+        </div>
+        <div class="card-body">
+            @if (Model.Employees?.Items?.Any() == true)
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Document</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Job Title</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model.Employees.Items)
+                            {
+                                <tr>
+                                    <td>@employee.DocumentNumber</td>
+                                    <td>@employee.FirstName @employee.LastName</td>
+                                    <td>@employee.Email</td>
+                                    <td>@employee.Department</td>
+                                    <td>@employee.JobTitle</td>
+                                    <td>
+                                        @if (employee.Status.Contains("Activo", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-success">@employee.Status</span>
+                                        }
+                                        else if (employee.Status.Contains("Vacaciones", StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            <span class="badge bg-warning">@employee.Status</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@employee.Status</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-page="Edit" asp-route-id="@employee.Id" class="btn btn-sm btn-outline-primary" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a asp-page-handler="DownloadPdf" asp-route-id="@employee.Id" class="btn btn-sm btn-outline-info" title="Download PDF">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </a>
+                                            <form method="post" asp-page-handler="Delete" asp-route-id="@employee.Id" style="display:inline;" 
+                                                  onsubmit="return confirm('Are you sure you want to delete this employee?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.Employees.TotalPages > 1)
+                {
+                    <nav aria-label="Employee pagination">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                                <a class="page-link" asp-page="Index" asp-route-currentPage="@(Model.CurrentPage - 1)">Previous</a>
+                            </li>
+                            @for (int i = 1; i <= Model.Employees.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" asp-page="Index" asp-route-currentPage="@i">@i</a>
+                                </li>
+                            }
+                            <li class="page-item @(Model.CurrentPage == Model.Employees.TotalPages ? "disabled" : "")">
+                                <a class="page-link" asp-page="Index" asp-route-currentPage="@(Model.CurrentPage + 1)">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                }
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No employees found. Add one or import from Excel.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

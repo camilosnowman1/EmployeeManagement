@@ -9,5 +9,6 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Employee, EmployeeDto>().ReverseMap();
+        CreateMap<Application.Employees.Commands.RegisterEmployee.RegisterEmployeeCommand, Employee>();
     }
 }

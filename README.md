@@ -1,90 +1,84 @@
 # Employee Management System - TalentoPlus S.A.S.
 
-## 📋 Descripción del Proyecto
+## 📋 Project Description
 
-Sistema completo de gestión de empleados desarrollado con .NET 8, ASP.NET Core, PostgreSQL y Clean Architecture. Incluye aplicación web para administradores, API REST con JWT, importación de Excel, generación de PDFs, y dashboard con IA (Gemini).
+A comprehensive employee management system developed with .NET 8, ASP.NET Core, PostgreSQL, and Clean Architecture. It includes a web application for administrators, a REST API with JWT, Excel import functionality, PDF generation, and an AI-powered dashboard using Gemini.
 
 ## 🚀 Quick Start
 
-### Requisitos Previos
-- Docker y Docker Compose instalados
-- Puerto 5001 (WebAPI), 5002 (WebApp), 5432 (PostgreSQL) disponibles
+### Prerequisites
+- Docker and Docker Compose installed
+- Ports 5001 (WebAPI), 5002 (WebApp), and 5432 (PostgreSQL) must be available
 
-### Ejecución con Docker
+### Running with Docker
 
 ```bash
-# 1. Clonar el repositorio
+# 1. Clone the repository
 git clone https://github.com/camilosnowman1/EmployeeManagement.git
 cd EmployeeManagement
 
-# 2. Ejecutar migraciones (PRIMERA VEZ)
-docker compose up -d db
-sleep 10
-cd WebAPI
-dotnet ef database update --connection "Host=localhost;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin"
-cd ..
+# 2. Build and run all services
+# This command will also automatically apply database migrations on the first run.
+docker compose up --build -d
 
-# 3. Iniciar todos los servicios
-docker compose up -d
-
-# 4. Verificar que todo esté corriendo
+# 3. Verify that everything is running
 docker compose ps
 ```
 
-### Acceso a las Aplicaciones
+### Accessing the Applications
 
 - **WebApp (Admin)**: http://localhost:5002
 - **WebAPI (Swagger)**: http://localhost:5001/swagger
 - **PostgreSQL**: localhost:5432
 
-## 🔐 Credenciales de Acceso
+## 🔐 Access Credentials
 
-### Administrador Web (ASP.NET Core Identity)
-**IMPORTANTE**: En el primer acceso, debes registrarte en http://localhost:5002/Identity/Account/Register
+### Web Administrator (ASP.NET Core Identity)
+**IMPORTANT**: On your first visit, you must register an account at http://localhost:5002/Identity/Account/Register
 
-- **Email**: admin@talento plus.com (o el que registres)
-- **Password**: Admin123! (mínimo 6 caracteres, 1 mayúscula, 1 número)
+- **Email**: admin@talentoplus.com (or the one you register)
+- **Password**: Admin123! (minimum 6 characters, 1 uppercase, 1 number)
 
-### Base de Datos PostgreSQL
-- **Host**: localhost (o `db` dentro de Docker)
+### PostgreSQL Database
+- **Host**: localhost (or `db` within Docker)
 - **Port**: 5432
 - **Database**: EmployeeDB
 - **Username**: postgres
 - **Password**: admin
 
-## 📊 Funcionalidades Implementadas
+## 📊 Implemented Features
 
-### ✅ 1. Aplicación Web (Administrador)
-- **Autenticación**: ASP.NET Core Identity
-- **CRUD Empleados**: Crear, editar, listar, eliminar
-- **Importación Excel**: Subir archivo .xlsx con empleados
-- **Generación PDF**: Hoja de vida de cada empleado
-- **Dashboard**: Estadísticas + IA para consultas en lenguaje natural
+### ✅ 1. Web Application (Administrator)
+- **Authentication**: ASP.NET Core Identity
+- **Employee CRUD**: Create, edit, list, delete
+- **Excel Import**: Upload an .xlsx file with employee data
+- **PDF Generation**: Employee resume/profile sheet
+- **Dashboard**: Statistics + AI for natural language queries
 
-### ✅ 2. API REST
-#### Endpoints Públicos
-- `GET /api/departments` - Listar departamentos
+### ✅ 2. REST API
+#### Public Endpoints
+- `GET /api/departments` - List departments
 
-#### Endpoints Protegidos (requieren JWT)
-- `GET /api/employees` - Listar empleados (paginado)
-- `GET /api/employees/{id}` - Obtener empleado por ID
-- `POST /api/employees` - Crear empleado
-- `PUT /api/employees/{id}` - Actualizar empleado
-- `DELETE /api/employees/{id}` - Eliminar empleado
-- `GET /api/employees/me/pdf` - Descargar PDF propio
-- `GET /api/dashboard/stats` - Estadísticas
-- `POST /api/ai/query` - Consultas IA
+#### Protected Endpoints (require JWT)
+- `GET /api/employees` - List employees (paginated)
+- `GET /api/employees/{id}` - Get employee by ID
+- `POST /api/employees` - Create an employee
+- `PUT /api/employees/{id}` - Update an employee
+- `DELETE /api/employees/{id}` - Delete an employee
+- `GET /api/employees/me/pdf` - Download your own PDF
+- `GET /api/dashboard/stats` - Get dashboard statistics
+- `POST /api/ai/query` - Make AI-powered queries
 
-### ✅ 3. Dashboard con IA (Gemini)
-- **Tarjetas de Estadísticas**:
-  - Total de empleados
-  - Empleados en vacaciones
-  - Empleados activos
-- **Asistente IA**: Consultas en lenguaje natural
-  - Ejemplo: "¿Cuántos desarrolladores tenemos?"
-  - Ejemplo: "¿Cuántos empleados hay en Marketing?"
+### ✅ 3. AI Dashboard (Gemini)
+- **Statistic Cards**:
+  - Total employees
+  - Employees on vacation
+  - Active employees
+- **AI Assistant**: Natural language queries
+  - Example: "How many developers do we have?"
+  - Example: "How many employees are in Marketing?"
 
-### ✅ 4. Pruebas Automatizadas
+### ✅ 4. Automated Tests
 - **Unit Tests** (2):
   - `CreateEmployeeValidatorTests.Should_Have_Error_When_FirstName_Is_Empty`
   - `CreateEmployeeValidatorTests.Should_Not_Have_Error_When_Command_Is_Valid`
@@ -93,125 +87,125 @@ docker compose ps
   - `DepartmentsApiTests.GetDepartments_ReturnsListOfStrings`
 
 ```bash
-# Ejecutar tests
+# Run tests
 dotnet test
 ```
 
-### ✅ 5. Arquitectura
+### ✅ 5. Architecture
 - **Clean Architecture**: Domain, Application, Infrastructure, WebAPI, WebApp
-- **Patrón Repositorio**: `IEmployeeRepository`
-- **CQRS**: MediatR con Commands y Queries
-- **Validación**: FluentValidation
+- **Repository Pattern**: `IEmployeeRepository`
+- **CQRS**: MediatR with Commands and Queries
+- **Validation**: FluentValidation
 - **Mapping**: AutoMapper
 
-## 🔧 Variables de Entorno
+## 🔧 Environment Variables
 
-### Docker Compose (ya configuradas)
+### Docker Compose (already configured)
 ```yaml
-# WebAPI y WebApp
+# WebAPI & WebApp
 POSTGRESQL_ADDON_URI=Host=db;Port=5432;Database=EmployeeDB;Username=postgres;Password=admin;SSL Mode=Disable
 ASPNETCORE_ENVIRONMENT=Development
 GEMINI_API_KEY=AIzaSyD9thWTYxjEzPXYYCabaaA4OqmW44JDvIE
 
-# WebApp adicional
+# Additional for WebApp
 ApiBaseUrl=http://webapi:8080
 ```
 
-### Para Desarrollo Local (sin Docker)
+### For Local Development (without Docker)
 ```bash
 export POSTGRESQL_ADDON_URI="postgres://postgres:admin@localhost:5432/EmployeeDB"
 export GEMINI_API_KEY="AIzaSyD9thWTYxjEzPXYYCabaaA4OqmW44JDvIE"
 ```
 
-## 📁 Estructura del Proyecto
+## 📁 Project Structure
 
 ```
 EmployeeManagement/
-├── Domain/                 # Entidades y contratos
+├── Domain/                 # Entities and contracts
 │   ├── Entities/
 │   └── Interfaces/
-├── Application/            # Lógica de negocio (CQRS)
+├── Application/            # Business logic (CQRS)
 │   ├── DTOs/
 │   ├── Employees/
 │   │   ├── Commands/
 │   │   └── Queries/
 │   ├── Interfaces/
 │   └── Mappings/
-├── Infrastructure/         # Implementaciones
+├── Infrastructure/         # Implementations
 │   ├── Persistence/
 │   ├── Repositories/
 │   └── Services/
-├── WebAPI/                 # API REST
+├── WebAPI/                 # REST API
 │   └── Controllers/
 ├── WebApp/                 # Razor Pages
 │   └── Pages/
-├── Tests/                  # Pruebas
+├── Tests/                  # Tests
 │   ├── UnitTests/
 │   └── IntegrationTests/
 └── docker-compose.yml
 ```
 
-## 🎯 Uso del Sistema
+## 🎯 System Usage
 
-### 1. Importar Empleados desde Excel
-1. Ir a http://localhost:5002/Employees
-2. Hacer clic en "Seleccionar archivo"
-3. Subir el archivo `Empleados.xlsx`
-4. Hacer clic en "Upload"
-5. Los empleados se importarán automáticamente
+### 1. Import Employees from Excel
+1. Go to http://localhost:5002/Employees
+2. Click on "Choose file"
+3. Upload the `Employees.xlsx` file
+4. Click "Upload"
+5. The employees will be imported automatically
 
-### 2. Generar PDF de Empleado
-1. En la lista de empleados, hacer clic en el botón azul "PDF"
-2. Se descargará automáticamente el archivo `Employee_{ID}.pdf`
+### 2. Generate Employee PDF
+1. In the employee list, click the blue "PDF" button
+2. The `Employee_{ID}.pdf` file will be downloaded automatically
 
-### 3. Usar el Dashboard con IA
-1. Ir a http://localhost:5002/Dashboard
-2. Ver las estadísticas en las tarjetas
-3. En "AI Assistant", escribir una pregunta:
-   - "¿Cuántos empleados trabajan en Tecnología?"
-   - "¿Cuántos desarrolladores tenemos?"
-4. Hacer clic en "Ask AI"
-5. Ver la respuesta generada por Gemini
+### 3. Use the AI Dashboard
+1. Go to http://localhost:5002/Dashboard
+2. View the statistics on the cards
+3. In the "AI Assistant" text box, type a question:
+   - "How many employees work in Technology?"
+   - "How many developers do we have?"
+4. Click "Ask AI"
+5. See the response generated by Gemini
 
-## ⚠️ Funcionalidades Pendientes
+## ⚠️ Pending Features
 
-Por limitaciones de tiempo, las siguientes funcionalidades **NO están implementadas** pero están documentadas para futura implementación:
+Due to time constraints, the following features are **NOT implemented** but are documented for future implementation:
 
-### 1. Autoregistro de Empleados (API Pública)
-**Endpoint faltante**: `POST /api/employees/register`
+### 1. Employee Self-Registration (Public API)
+**Missing Endpoint**: `POST /api/employees/register`
 
-**Implementación sugerida**:
+**Suggested Implementation**:
 ```csharp
-// En WebAPI/Controllers/EmployeesController.cs
+// In WebAPI/Controllers/EmployeesController.cs
 [HttpPost("register")]
 [AllowAnonymous]
 public async Task<IActionResult> Register([FromBody] RegisterEmployeeCommand command)
 {
     var result = await _mediator.Send(command);
-    // Enviar email de bienvenida aquí
+    // Send welcome email here
     return Ok(result);
 }
 ```
 
-### 2. Login de Empleados (JWT)
-**Endpoint faltante**: `POST /api/auth/login`
+### 2. Employee Login (JWT)
+**Missing Endpoint**: `POST /api/auth/login`
 
-**Implementación sugerida**:
+**Suggested Implementation**:
 ```csharp
-// Crear WebAPI/Controllers/AuthController.cs
+// Create WebAPI/Controllers/AuthController.cs
 [HttpPost("login")]
 public async Task<IActionResult> Login([FromBody] LoginCommand command)
 {
-    // Validar credenciales
-    // Generar JWT token
+    // Validate credentials
+    // Generate JWT token
     return Ok(new { token = "..." });
 }
 ```
 
-### 3. Consultar Información Propia
-**Endpoint faltante**: `GET /api/employees/me`
+### 3. Get Own Information
+**Missing Endpoint**: `GET /api/employees/me`
 
-**Implementación sugerida**:
+**Suggested Implementation**:
 ```csharp
 [HttpGet("me")]
 [Authorize]
@@ -223,98 +217,98 @@ public async Task<IActionResult> GetMyInfo()
 }
 ```
 
-### 4. Envío de Email SMTP
-**Servicio**: `EmailService` existe pero no está configurado
+### 4. SMTP Email Sending
+**Service**: `EmailService` exists but is not configured
 
-**Configuración necesaria**:
+**Required Configuration**:
 ```yaml
-# En docker-compose.yml
+# In docker-compose.yml
 - SMTP_HOST=smtp.gmail.com
 - SMTP_PORT=587
-- SMTP_USERNAME=tu-email@gmail.com
-- SMTP_PASSWORD=tu-app-password
+- SMTP_USERNAME=your-email@gmail.com
+- SMTP_PASSWORD=your-app-password
 ```
 
-## 🐛 Problemas Conocidos
+## 🐛 Known Issues
 
-### 1. Paginación en WebApp
-**Síntoma**: Al hacer clic en "Next" o en números de página, muestra los mismos empleados.
+### 1. Pagination in WebApp
+**Symptom**: Clicking "Next" or page numbers shows the same employees.
 
-**Workaround**: Usar la API directamente:
+**Workaround**: Use the API directly:
 ```bash
 curl "http://localhost:5001/api/employees?page=2&pageSize=10"
 ```
 
-**Causa**: Posible problema de cache en el navegador o en Razor Pages.
+**Cause**: Possible caching issue in the browser or Razor Pages.
 
-### 2. IA Gemini
-**Síntoma**: A veces retorna "BadRequest" o "Error calling Gemini API".
+### 2. Gemini AI
+**Symptom**: Sometimes returns "BadRequest" or "Error calling Gemini API".
 
-**Solución**: 
-- Verificar que `GEMINI_API_KEY` esté configurada
-- Reiniciar contenedores: `docker compose restart`
-- La API Key incluida tiene límites de uso gratuitos
+**Solution**: 
+- Verify that `GEMINI_API_KEY` is configured
+- Restart containers: `docker compose restart`
+- The included API Key has free usage limits
 
-## 🚢 Despliegue en Clever Cloud
+## 🚢 Deployment to Clever Cloud
 
 ### WebAPI
-1. Crear aplicación .NET en Clever Cloud
-2. Vincular addon PostgreSQL
-3. Configurar variables de entorno:
+1. Create a .NET application in Clever Cloud
+2. Link the PostgreSQL addon
+3. Configure environment variables:
    ```
    CC_DOTNET_PROJECT=WebAPI/WebAPI.csproj
-   GEMINI_API_KEY=tu-key
+   GEMINI_API_KEY=your-key
    ```
-4. Push a GitHub (auto-deploy)
+4. Push to GitHub (for auto-deploy)
 
 ### WebApp
-1. Crear aplicación .NET separada
-2. Vincular mismo addon PostgreSQL
-3. Configurar variables:
+1. Create a separate .NET application
+2. Link the same PostgreSQL addon
+3. Configure variables:
    ```
    CC_DOTNET_PROJECT=WebApp/WebApp.csproj
-   ApiBaseUrl=https://tu-webapi.cleverapps.io
-   GEMINI_API_KEY=tu-key
+   ApiBaseUrl=https://your-webapi.cleverapps.io
+   GEMINI_API_KEY=your-key
    ```
-4. Push a GitHub
+4. Push to GitHub
 
-## 📝 Comandos Útiles
+## 📝 Useful Commands
 
 ```bash
-# Ver logs
+# View logs
 docker compose logs -f webapi
 docker compose logs -f webapp
 
-# Reiniciar servicios
+# Restart services
 docker compose restart webapi webapp
 
-# Detener todo
+# Stop everything
 docker compose down
 
-# Limpiar base de datos (CUIDADO: borra datos)
+# Clean up the database (WARNING: deletes data)
 docker compose down -v
 
-# Ejecutar migraciones
-cd WebAPI
-dotnet ef database update
+# Manually run migrations (not needed with the current docker-compose setup)
+# cd WebAPI
+# dotnet ef database update
 
-# Ejecutar tests
+# Run tests
 dotnet test
 
-# Ver empleados en BD
+# See employee count in DB
 docker exec -it employeemanagement-db-1 psql -U postgres -d EmployeeDB -c "SELECT COUNT(*) FROM \"Employees\";"
 ```
 
-## 📧 Contacto y Soporte
+## 📧 Contact and Support
 
-- **Repositorio**: https://github.com/camilosnowman1/EmployeeManagement
-- **Desarrollador**: Camilo (camilosnowman1)
-- **Tecnologías**: .NET 8, PostgreSQL, Docker, Gemini AI
+- **Repository**: https://github.com/camilosnowman1/EmployeeManagement
+- **Developer**: Camilo (camilosnowman1)
+- **Technologies**: .NET 8, PostgreSQL, Docker, Gemini AI
 
-## 📄 Licencia
+## 📄 License
 
-Este proyecto fue desarrollado como prueba técnica para TalentoPlus S.A.S.
+This project was developed as a technical test for TalentoPlus S.A.S.
 
 ---
 
-**Nota**: Este README documenta el estado actual del proyecto. Las funcionalidades marcadas como "Pendientes" están diseñadas pero no implementadas por limitaciones de tiempo. El código base está preparado para su fácil implementación siguiendo los patrones ya establecidos.
+**Note**: This README documents the current state of the project. Features marked as "Pending" are designed but not implemented due to time constraints. The codebase is prepared for their easy implementation following the established patterns.

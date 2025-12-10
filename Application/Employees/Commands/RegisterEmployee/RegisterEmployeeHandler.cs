@@ -1,59 +1,65 @@
+using Application.DTOs;
+using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using MediatR;
-using Application.DTOs;
-using Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Application.Employees.Commands.RegisterEmployee;
 
 public class RegisterEmployeeHandler : IRequestHandler<RegisterEmployeeCommand, EmployeeDto>
 {
-    private readonly IEmployeeRepository _repository;
+    private readonly IEmployeeRepository _employeeRepository;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly IMapper _mapper;
     private readonly IEmailService _emailService;
+    private readonly ILogger<RegisterEmployeeHandler> _logger;
 
-    public RegisterEmployeeHandler(IEmployeeRepository repository, IMapper mapper, IEmailService emailService)
+    public RegisterEmployeeHandler(
+        IEmployeeRepository employeeRepository, 
+        UserManager<IdentityUser> userManager, 
+        IMapper mapper,
+        IEmailService emailService,
+        ILogger<RegisterEmployeeHandler> logger)
     {
-        _repository = repository;
+        _employeeRepository = employeeRepository;
+        _userManager = userManager;
         _mapper = mapper;
         _emailService = emailService;
+        _logger = logger;
     }
 
     public async Task<EmployeeDto> Handle(RegisterEmployeeCommand request, CancellationToken cancellationToken)
     {
-        var employee = new Employee
+        // 1. Create Identity User
+        var user = new IdentityUser { UserName = request.Email, Email = request.Email };
+        var result = await _userManager.CreateAsync(user, request.Password);
+
+        if (!result.Succeeded)
         {
-            Id = Guid.NewGuid(),
-            DocumentNumber = request.DocumentNumber,
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            DateOfBirth = DateTime.SpecifyKind(request.DateOfBirth, DateTimeKind.Utc),
-            Address = request.Address,
-            PhoneNumber = request.PhoneNumber,
-            Email = request.Email,
-            JobTitle = request.JobTitle,
-            Salary = request.Salary,
-            HireDate = DateTime.SpecifyKind(request.HireDate, DateTimeKind.Utc),
-            Status = request.Status,
-            EducationLevel = request.EducationLevel,
-            ProfessionalProfile = request.ProfessionalProfile,
-            Department = request.Department
-        };
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new Exception($"User registration failed: {errors}");
+        }
 
-        await _repository.AddAsync(employee);
+        // 2. Create Employee
+        var employee = _mapper.Map<Employee>(request);
+        // Ensure Id is generated if not handled by DB (usually DB handles it or we generate Guid)
+        if (employee.Id == Guid.Empty) employee.Id = Guid.NewGuid();
+        
+        await _employeeRepository.AddAsync(employee);
 
-        // Send welcome email
+        // 3. Send Welcome Email
+        _logger.LogInformation("[RegisterEmployeeHandler] Attempting to send welcome email to {Email}", request.Email);
         try
         {
-            await _emailService.SendWelcomeEmailAsync(
-                employee.Email,
-                $"{employee.FirstName} {employee.LastName}"
-            );
+            await _emailService.SendWelcomeEmailAsync(request.Email, $"{request.FirstName} {request.LastName}");
+            _logger.LogInformation("[RegisterEmployeeHandler] Email sent successfully to {Email}", request.Email);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Log error but don't fail registration
+            _logger.LogError(ex, "[RegisterEmployeeHandler] WARNING: Failed to send welcome email");
         }
 
         return _mapper.Map<EmployeeDto>(employee);

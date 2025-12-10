@@ -1,0 +1,60 @@
+@page
+@model WebApp.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <h1 class="mt-4">@ViewData["Title"]</h1>
+
+    <!-- Statistic Cards -->
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body">Total Employees</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <span class="small text-white stretched-link">@Model.DashboardStats?.TotalEmployees</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">On Vacation</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                     <span class="small text-white stretched-link">@Model.DashboardStats?.EmployeesOnVacation</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body">Active Employees</div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                     <span class="small text-white stretched-link">@Model.DashboardStats?.ActiveEmployees</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-brain me-1"></i>
+            AI Assistant (Powered by Gemini)
+        </div>
+        <div class="card-body">
+            <form method="post">
+                <div class="input-group">
+                    <input asp-for="AiQuery" class="form-control" type="text" placeholder="Ask a question about your employees..." />
+                    <button class="btn btn-primary" type="submit">Ask AI</button>
+                </div>
+            </form>
+            @if (!string.IsNullOrEmpty(Model.AiResponse))
+            {
+                <div class="mt-3">
+                    <strong>Response:</strong>
+                    <p class="mt-2" style="white-space: pre-wrap;">@Model.AiResponse</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

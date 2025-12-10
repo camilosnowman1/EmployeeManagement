@@ -1,11 +1,6 @@
-using Application.DTOs;
-using Application.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using Application.Employees.Commands.RegisterEmployee;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace WebAPI.Controllers;
 
@@ -13,76 +8,24 @@ namespace WebAPI.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly IConfiguration _configuration;
+    private readonly IMediator _mediator;
 
-    private readonly IEmailService _emailService;
-
-    public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, IEmailService emailService)
+    public AuthController(IMediator mediator)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _configuration = configuration;
-        _emailService = emailService;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto model)
+    public async Task<IActionResult> Register([FromBody] RegisterEmployeeCommand command)
     {
-        if (model.Password != model.ConfirmPassword)
-            return BadRequest("Passwords do not match.");
-
-        var user = new IdentityUser { UserName = model.Email, Email = model.Email };
-        var result = await _userManager.CreateAsync(user, model.Password);
-
-        if (result.Succeeded)
-        {
-            await _emailService.SendWelcomeEmailAsync(model.Email, model.Email);
-            return Ok(new { Message = "User registered successfully" });
-        }
-
-        return BadRequest(result.Errors);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDto model)
+    public async Task<IActionResult> Login([FromBody] Application.Auth.Commands.Login.LoginCommand command)
     {
-        var user = await _userManager.FindByEmailAsync(model.Email);
-        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-        {
-            var token = GenerateJwtToken(user);
-            return Ok(new { Token = token });
-        }
-
-        return Unauthorized("Invalid login attempt.");
-    }
-
-    private string GenerateJwtToken(IdentityUser user)
-    {
-        var jwtKey = _configuration["Jwt:Key"] ?? "SuperSecretKey12345678901234567890";
-        var jwtIssuer = _configuration["Jwt:Issuer"] ?? "https://localhost:5000";
-        var jwtAudience = _configuration["Jwt:Audience"] ?? "https://localhost:5000";
-
-        var claims = new List<Claim>
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Email ?? ""),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.NameIdentifier, user.Id)
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-        var expires = DateTime.Now.AddDays(1);
-
-        var token = new JwtSecurityToken(
-            jwtIssuer,
-            jwtAudience,
-            claims,
-            expires: expires,
-            signingCredentials: creds
-        );
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var token = await _mediator.Send(command);
+        return Ok(new { Token = token });
     }
 }

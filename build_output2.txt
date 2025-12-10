@@ -1,0 +1,20 @@
+﻿  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos est├ín actualizados para la restauraci├│n.
+  Domain -> C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\Domain\bin\Debug\net8.0\Domain.dll
+  Application -> C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\Application\bin\Debug\net8.0\Application.dll
+  Infrastructure -> C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\Infrastructure\bin\Debug\net8.0\Infrastructure.dll
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "DashboardStats" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "AiQuery" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "AiResponse" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Employees\Index.cshtml.cs(26,67): error CS7036: No se ha dado ning├║n argumento que corresponda al par├ímetro requerido "items" de "PaginatedResult<EmployeeDto>.PaginatedResult(IEnumerable<EmployeeDto>, int, int, int)" [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+
+ERROR al compilar.
+
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "DashboardStats" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "AiQuery" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Dashboard\Index.cshtml.cs(16,16): warning CS8618: El elemento propiedad "AiResponse" que no acepta valores NULL debe contener un valor distinto de NULL al salir del constructor. Considere la posibilidad de agregar el modificador "required'"o declarar el propiedad como un valor que acepta valores NULL. [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\Pages\Employees\Index.cshtml.cs(26,67): error CS7036: No se ha dado ning├║n argumento que corresponda al par├ímetro requerido "items" de "PaginatedResult<EmployeeDto>.PaginatedResult(IEnumerable<EmployeeDto>, int, int, int)" [C:\Users\camil\Downloads\EmployeeManagement\EmployeeManagement\WebApp\WebApp.csproj]
+    3 Advertencia(s)
+    1 Errores
+
+Tiempo transcurrido 00:00:03.18

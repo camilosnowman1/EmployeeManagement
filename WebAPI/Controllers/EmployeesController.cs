@@ -18,11 +18,13 @@ public class EmployeesController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly IAuthService _authService;
+    private readonly IPdfService _pdfService;
 
-    public EmployeesController(IMediator mediator, IAuthService authService)
+    public EmployeesController(IMediator mediator, IAuthService authService, IPdfService pdfService)
     {
         _mediator = mediator;
         _authService = authService;
+        _pdfService = pdfService;
     }
 
     [HttpGet]
@@ -86,6 +88,7 @@ public class EmployeesController : ControllerBase
         return File(pdfBytes, "application/pdf", $"My_CV.pdf");
     }
 
+
     [HttpGet("{id}")]
     public async Task<ActionResult<EmployeeDto>> GetById(Guid id)
     {
@@ -110,21 +113,6 @@ public class EmployeesController : ControllerBase
         catch (Exception ex)
         {
             return BadRequest(new { message = ex.Message });
-        }
-    }
-
-    [HttpPost("login")]
-    [AllowAnonymous]
-    public async Task<IActionResult> EmployeeLogin([FromBody] EmployeeLoginRequest request)
-    {
-        try
-        {
-            var result = await _authService.LoginEmployeeAsync(request.DocumentNumber, request.Email);
-            return Ok(result);
-        }
-        catch (UnauthorizedAccessException)
-        {
-            return Unauthorized(new { message = "Invalid credentials" });
         }
     }
 

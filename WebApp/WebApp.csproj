@@ -14,6 +14,28 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Pages\Account\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Account\Logout.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Account\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Auth\Login.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Auth\Register.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Dashboard.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Dashboard\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Employees\Create.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Employees\Delete.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Employees\Edit.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Employees\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Privacy.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Shared\_Layout.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Shared\_LoginPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Shared\_ValidationScriptsPartial.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\_ViewStart.cshtml" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>

@@ -1,58 +1,110 @@
 using Application.DTOs;
+using Application.Employees.Commands.CreateEmployee;
+using Application.Employees.Commands.DeleteEmployee;
+using Application.Employees.Commands.ImportEmployees;
 using Application.Employees.Queries.GetEmployees;
+using Application.Interfaces;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebApp.Pages.Employees;
 
+[Authorize]
 public class IndexModel : PageModel
 {
     private readonly IMediator _mediator;
+    private readonly IPdfService _pdfService;
 
-    public IndexModel(IMediator mediator)
+    public IndexModel(IMediator mediator, IPdfService pdfService)
     {
         _mediator = mediator;
+        _pdfService = pdfService;
     }
 
-    public IEnumerable<EmployeeDto> Employees { get; set; } = new List<EmployeeDto>();
+    public PaginatedResult<EmployeeDto> Employees { get; set; } = new();
+    
+    [BindProperty(SupportsGet = true)]
     public int CurrentPage { get; set; } = 1;
-    public int TotalPages { get; set; }
+    
     public int PageSize { get; set; } = 10;
+    
+    public string? Message { get; set; }
+    public string? ErrorMessage { get; set; }
 
-    public async Task OnGetAsync(int page = 1, int pageSize = 10)
+    public async Task OnGetAsync()
     {
-        var result = await _mediator.Send(new GetEmployeesQuery(page, pageSize));
-        Employees = result.Items;
-        CurrentPage = result.Page;
-        TotalPages = result.TotalPages;
-        PageSize = result.PageSize;
+        var query = new GetEmployeesQuery(CurrentPage, PageSize);
+        Employees = await _mediator.Send(query);
+        
+        // Preserve messages from TempData
+        Message = TempData["Message"]?.ToString();
+        ErrorMessage = TempData["ErrorMessage"]?.ToString();
     }
 
-    public async Task<IActionResult> OnPostDownloadPdfAsync(Guid id)
+    public async Task<IActionResult> OnPostUploadExcelAsync(IFormFile excelFile)
     {
-        var query = new Application.Employees.Queries.GetEmployeePdf.GetEmployeePdfQuery(id);
-        var pdfBytes = await _mediator.Send(query);
-
-        if (pdfBytes == null)
-            return NotFound();
-
-        return File(pdfBytes, "application/pdf", $"Employee_{id}.pdf");
-    }
-
-    [BindProperty]
-    public IFormFile UploadedFile { get; set; }
-
-    public async Task<IActionResult> OnPostUploadAsync()
-    {
-        if (UploadedFile != null && UploadedFile.Length > 0)
+        if (excelFile == null || excelFile.Length == 0)
         {
-            using (var stream = UploadedFile.OpenReadStream())
-            {
-                var command = new Application.Employees.Commands.ImportEmployees.ImportEmployeesCommand(stream);
-                await _mediator.Send(command);
-            }
+            TempData["ErrorMessage"] = "Please select a valid Excel file.";
+            return RedirectToPage();
         }
+
+        if (!excelFile.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase) &&
+            !excelFile.FileName.EndsWith(".xls", StringComparison.OrdinalIgnoreCase))
+        {
+            TempData["ErrorMessage"] = "Only Excel files (.xlsx, .xls) are allowed.";
+            return RedirectToPage();
+        }
+
+        try
+        {
+            using var stream = excelFile.OpenReadStream();
+            var command = new ImportEmployeesCommand(stream);
+            var importedCount = await _mediator.Send(command);
+            
+            TempData["Message"] = $"Successfully imported {importedCount} employees from Excel.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error importing Excel: {ex.Message}";
+        }
+
         return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnPostDeleteAsync(Guid id)
+    {
+        try
+        {
+            await _mediator.Send(new DeleteEmployeeCommand(id));
+            TempData["Message"] = "Employee deleted successfully.";
+        }
+        catch (Exception ex)
+        {
+            TempData["ErrorMessage"] = $"Error deleting employee: {ex.Message}";
+        }
+
+        return RedirectToPage();
+    }
+
+    public async Task<IActionResult> OnGetDownloadPdfAsync(Guid id)
+    {
+        try
+        {
+            var query = new Application.Employees.Queries.GetEmployeePdf.GetEmployeePdfQuery(id);
+            var pdfBytes = await _mediator.Send(query);
+
+            if (pdfBytes == null)
+                return NotFound();
+
+            return File(pdfBytes, "application/pdf", $"Employee_{id}.pdf");
+        }
+        catch (Exception)
+        {
+            TempData["ErrorMessage"] = "Error generating PDF.";
+            return RedirectToPage();
+        }
     }
 }

@@ -8,11 +8,14 @@ using Application.Employees.Commands.CreateEmployee;
 using Microsoft.AspNetCore.Identity;
 using Application.Interfaces;
 using Infrastructure.Services;
+using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
 
 // Database Configuration
 var connectionString = ConnectionStringHelper.GetConnectionString(builder.Configuration);
@@ -28,9 +31,10 @@ builder.Services.AddDefaultIdentity<Microsoft.AspNetCore.Identity.IdentityUser>(
 builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddScoped<IPdfService, PdfService>();
 builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>(); // <-- Corrected typo here
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddHttpClient<IGeminiService, GeminiService>();
+builder.Services.AddScoped<IJwtTokenGenerator, Infrastructure.Auth.JwtTokenGenerator>();
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Employees.Queries.GetEmployees.GetEmployeesQuery).Assembly));
@@ -43,19 +47,17 @@ builder.Services.AddValidatorsFromAssembly(typeof(CreateEmployeeValidator).Assem
 
 var app = builder.Build();
 
-// Apply migrations automatically (commented out for Docker - run manually)
-// using (var scope = app.Services.CreateScope())
-// {
-//     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     db.Database.Migrate();
-// }
-
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
+
+// --- Use URL Rewriting to redirect the root URL to /dashboard ---
+var rewriteOptions = new RewriteOptions().AddRedirect("^$", "dashboard", 302);
+app.UseRewriter(rewriteOptions);
+// --- End of Code ---
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

@@ -1,69 +1,156 @@
-@page
+@page "{id:guid}"
 @model WebApp.Pages.Employees.EditModel
 @{
     ViewData["Title"] = "Edit Employee";
 }
 
-<h1>Edit Employee</h1>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h4 class="mb-0"><i class="fas fa-user-edit me-2"></i>@ViewData["Title"]</h4>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger">@Model.ErrorMessage</div>
+                    }
 
-<div class="row">
-    <div class="col-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Employee.Id" />
-            <div class="form-group">
-                <label asp-for="Employee.DocumentNumber" class="control-label"></label>
-                <input asp-for="Employee.DocumentNumber" class="form-control" />
-                <span asp-validation-for="Employee.DocumentNumber" class="text-danger"></span>
+                    <form method="post">
+                        <input type="hidden" asp-for="Employee.Id" />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.DocumentNumber" class="form-label">Document Number *</label>
+                                <input asp-for="Employee.DocumentNumber" class="form-control" required />
+                                <span asp-validation-for="Employee.DocumentNumber" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.Email" class="form-label">Email *</label>
+                                <input asp-for="Employee.Email" type="email" class="form-control" required />
+                                <span asp-validation-for="Employee.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.FirstName" class="form-label">First Name *</label>
+                                <input asp-for="Employee.FirstName" class="form-control" required />
+                                <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.LastName" class="form-label">Last Name *</label>
+                                <input asp-for="Employee.LastName" class="form-control" required />
+                                <span asp-validation-for="Employee.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.DateOfBirth" class="form-label">Date of Birth *</label>
+                                <input asp-for="Employee.DateOfBirth" type="date" class="form-control" required />
+                                <span asp-validation-for="Employee.DateOfBirth" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.PhoneNumber" class="form-label">Phone Number *</label>
+                                <input asp-for="Employee.PhoneNumber" class="form-control" required />
+                                <span asp-validation-for="Employee.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Employee.Address" class="form-label">Address *</label>
+                            <input asp-for="Employee.Address" class="form-control" required />
+                            <span asp-validation-for="Employee.Address" class="text-danger"></span>
+                        </div>
+
+                        <hr class="my-4" />
+                        <h5>Employment Information</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.Department" class="form-label">Department *</label>
+                                <select asp-for="Employee.Department" class="form-select" required>
+                                    <option value="">Select Department</option>
+                                    <option value="Tecnología">Tecnología</option>
+                                    <option value="Recursos Humanos">Recursos Humanos</option>
+                                    <option value="Finanzas">Finanzas</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Operaciones">Operaciones</option>
+                                    <option value="Ventas">Ventas</option>
+                                    <option value="Legal">Legal</option>
+                                </select>
+                                <span asp-validation-for="Employee.Department" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.JobTitle" class="form-label">Job Title *</label>
+                                <input asp-for="Employee.JobTitle" class="form-control" required />
+                                <span asp-validation-for="Employee.JobTitle" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Employee.Salary" class="form-label">Salary *</label>
+                                <input asp-for="Employee.Salary" type="number" step="0.01" class="form-control" required />
+                                <span asp-validation-for="Employee.Salary" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Employee.HireDate" class="form-label">Hire Date *</label>
+                                <input asp-for="Employee.HireDate" type="date" class="form-control" required />
+                                <span asp-validation-for="Employee.HireDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label asp-for="Employee.Status" class="form-label">Status *</label>
+                                <select asp-for="Employee.Status" class="form-select" required>
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
+                                    <option value="Vacaciones">Vacaciones</option>
+                                    <option value="Licencia">Licencia</option>
+                                </select>
+                                <span asp-validation-for="Employee.Status" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Employee.EducationLevel" class="form-label">Education Level *</label>
+                                <select asp-for="Employee.EducationLevel" class="form-select" required>
+                                    <option value="">Select Level</option>
+                                    <option value="Bachillerato">Bachillerato</option>
+                                    <option value="Técnico">Técnico</option>
+                                    <option value="Tecnólogo">Tecnólogo</option>
+                                    <option value="Profesional">Profesional</option>
+                                    <option value="Especialización">Especialización</option>
+                                    <option value="Maestría">Maestría</option>
+                                    <option value="Doctorado">Doctorado</option>
+                                </select>
+                                <span asp-validation-for="Employee.EducationLevel" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Employee.ProfessionalProfile" class="form-label">Professional Profile *</label>
+                            <textarea asp-for="Employee.ProfessionalProfile" class="form-control" rows="3" required></textarea>
+                            <span asp-validation-for="Employee.ProfessionalProfile" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-page="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Employee.FirstName" class="control-label"></label>
-                <input asp-for="Employee.FirstName" class="form-control" />
-                <span asp-validation-for="Employee.FirstName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Employee.LastName" class="control-label"></label>
-                <input asp-for="Employee.LastName" class="form-control" />
-                <span asp-validation-for="Employee.LastName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Employee.Email" class="control-label"></label>
-                <input asp-for="Employee.Email" class="form-control" />
-                <span asp-validation-for="Employee.Email" class="text-danger"></span>
-            </div>
-             <div class="form-group">
-                <label asp-for="Employee.DateOfBirth" class="control-label"></label>
-                <input asp-for="Employee.DateOfBirth" class="form-control" type="date" />
-                <span asp-validation-for="Employee.DateOfBirth" class="text-danger"></span>
-            </div>
-             <div class="form-group">
-                <label asp-for="Employee.HireDate" class="control-label"></label>
-                <input asp-for="Employee.HireDate" class="form-control" type="date" />
-                <span asp-validation-for="Employee.HireDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Employee.Salary" class="control-label"></label>
-                <input asp-for="Employee.Salary" class="form-control" />
-                <span asp-validation-for="Employee.Salary" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Employee.JobTitle" class="control-label"></label>
-                <input asp-for="Employee.JobTitle" class="form-control" />
-                <span asp-validation-for="Employee.JobTitle" class="text-danger"></span>
-            </div>
-             <div class="form-group">
-                <label asp-for="Employee.Department" class="control-label"></label>
-                <input asp-for="Employee.Department" class="form-control" />
-                <span asp-validation-for="Employee.Department" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-3">
-                <input type="submit" value="Save" class="btn btn-primary" />
-                <a asp-page="./Index" class="btn btn-secondary">Back to List</a>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <partial name="_ValidationScriptsPartial" />
 }

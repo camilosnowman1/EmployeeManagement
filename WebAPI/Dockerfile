@@ -2,6 +2,10 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+# Install a specific version of EF Core tools
+RUN dotnet tool install --global dotnet-ef --version 8.0.0
+ENV PATH="$PATH:/root/.dotnet/tools"
+
 # Copy solution and project files
 COPY ["EmployeeManagement.sln", "./"]
 COPY ["WebAPI/WebAPI.csproj", "WebAPI/"]
