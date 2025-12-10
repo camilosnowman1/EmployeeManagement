@@ -2,6 +2,8 @@ using Application.DTOs;
 using Application.Employees.Commands.CreateEmployee;
 using Application.Employees.Commands.DeleteEmployee;
 using Application.Employees.Commands.UpdateEmployee;
+using Application.Employees.Commands.RegisterEmployee;
+using Application.Interfaces;
 using Application.Employees.Queries.GetEmployeeById;
 using Application.Employees.Queries.GetEmployees;
 using MediatR;
@@ -15,10 +17,12 @@ namespace WebAPI.Controllers;
 public class EmployeesController : ControllerBase
 {
     private readonly IMediator _mediator;
+    private readonly IAuthService _authService;
 
-    public EmployeesController(IMediator mediator)
+    public EmployeesController(IMediator mediator, IAuthService authService)
     {
         _mediator = mediator;
+        _authService = authService;
     }
 
     [HttpGet]
@@ -92,6 +96,36 @@ public class EmployeesController : ControllerBase
             return NotFound();
         }
         return Ok(result);
+    }
+
+    [HttpPost("register")]
+    [AllowAnonymous]
+    public async Task<ActionResult<EmployeeDto>> Register(RegisterEmployeeCommand command)
+    {
+        try
+        {
+            var result = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpPost("login")]
+    [AllowAnonymous]
+    public async Task<IActionResult> EmployeeLogin([FromBody] EmployeeLoginRequest request)
+    {
+        try
+        {
+            var result = await _authService.LoginEmployeeAsync(request.DocumentNumber, request.Email);
+            return Ok(result);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            return Unauthorized(new { message = "Invalid credentials" });
+        }
     }
 
     [HttpPost]
