@@ -8,6 +8,7 @@ using Application.Employees.Commands.CreateEmployee;
 using Microsoft.AspNetCore.Identity;
 using Application.Interfaces;
 using Infrastructure.Services;
+using Infrastructure;
 using Microsoft.AspNetCore.Rewrite;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,13 +29,7 @@ builder.Services.AddDefaultIdentity<Microsoft.AspNetCore.Identity.IdentityUser>(
     .AddEntityFrameworkStores<AppDbContext>();
 
 // Dependency Injection
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IPdfService, PdfService>();
-builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
-builder.Services.AddScoped<IEmailService, EmailService>(); // <-- Corrected typo here
-builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddHttpClient<IGeminiService, GeminiService>();
-builder.Services.AddScoped<IJwtTokenGenerator, Infrastructure.Auth.JwtTokenGenerator>();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Employees.Queries.GetEmployees.GetEmployeesQuery).Assembly));

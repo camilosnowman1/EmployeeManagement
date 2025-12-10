@@ -9,6 +9,7 @@ using Application.Employees.Commands.CreateEmployee;
 using Microsoft.AspNetCore.Identity;
 using Application.Interfaces;
 using Infrastructure.Services;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,13 +61,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Dependency Injection
-builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddScoped<IPdfService, PdfService>();
-builder.Services.AddScoped<IExcelImportService, ExcelImportService>();
-builder.Services.AddScoped<IEmailService, EmailService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IDashboardService, DashboardService>();
-builder.Services.AddScoped<IJwtTokenGenerator, Infrastructure.Auth.JwtTokenGenerator>();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // MediatR
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Application.Employees.Queries.GetEmployees.GetEmployeesQuery).Assembly));
