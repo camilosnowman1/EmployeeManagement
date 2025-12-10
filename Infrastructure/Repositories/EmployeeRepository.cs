@@ -31,7 +31,7 @@ public class EmployeeRepository : IEmployeeRepository
         return (items, totalCount);
     }
 
-    public async Task<Employee> GetByEmailAsync(string email)
+    public async Task<Employee?> GetByEmailAsync(string email)
     {
         return await _context.Employees.FirstOrDefaultAsync(e => e.Email == email);
     }

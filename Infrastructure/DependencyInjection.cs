@@ -21,7 +21,7 @@ public static class DependencyInjection
         
         // Let's move the services first, as that's the immediate fix for GeminiService.
         
-        services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+        services.AddScoped<Domain.Interfaces.IEmployeeRepository, EmployeeRepository>();
         services.AddScoped<IPdfService, PdfService>();
         services.AddScoped<IExcelImportService, ExcelImportService>();
         services.AddScoped<IEmailService, EmailService>();
